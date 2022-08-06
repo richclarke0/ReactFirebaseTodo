@@ -13,5 +13,5 @@ exports.getAllTodos = (req, res) => {
             'body':'i have a lot to do today'
         }
     ]
-    return Response.json(todos)
+    return res.json(todos)
 }
