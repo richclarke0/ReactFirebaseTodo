@@ -5,7 +5,7 @@
 ## Let's get started in here:
 First create a Firebase app, name it whatever you want.  
 Then run this: 
-` npm install -g firebase-tools`
+` npm install -g firebase-tools`  
 Then you probably need to `firebase login`  
 And then `firebase init`  
 There is now a scrolling list in your CLI, select *`Functions: Configure a Cloud Functions directory and its files`*  
