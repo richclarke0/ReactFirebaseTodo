@@ -1,7 +1,11 @@
-###### *Press CMD+K, then V to preview this file in a side panel in VScode.*
-# React + Firebase ToDo App
-![logo](readme_img/2022-08-06-00-46-23.png)
+###### *Press CMD+K, then V to preview this file in a side panel in VScode.* This readme and project are based on this tutorial on [freecodecamp](https://www.freecodecamp.org):
+[![ToDo Heading from FreeCodeCamp](2022-08-06-12-43-42.png)](https://www.freecodecamp.org/news/how-to-build-a-todo-application-using-reactjs-and-firebase/)
+<hr>
 
+# React + Firebase ToDo App
+
+
+![logo](readme_img/2022-08-06-00-46-23.png)
 ## Let's get started in here:
 First create a Firebase app, name it whatever you want.  
 Then run this: 
@@ -79,7 +83,7 @@ Error: There was an error deploying functions
 
 This is not very helpful. What went wrong... hmmm. I went back through the code, and noticed this first (to be clear, this is *not* the error)
 ```js
-const app = require('express')();
+const app = require('express')(); //this is not the error.
 ```
 What's with those trailing `()`'s? I don't remember seeing that before when working with MERN apps. He's... invoking it as he requires it? I don't get it. This is something to explore more later.
 
@@ -97,4 +101,6 @@ require('./apis/todos')
 ```
 Seved, and tried 'firebase deploy' again, and got my happy little **✔  Deploy complete!**
 
+At this point, I tried to open the URL at `https://us-central1-thenameofmytodoapp.cloudfunctions.net/api/todos`
 ## Lets move on
+
