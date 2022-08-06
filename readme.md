@@ -1,5 +1,6 @@
 ###### *Press CMD+K, then V to preview this file in a side panel in VScode.*
 # React + Firebase ToDo App
+![logo](readme_img/2022-08-06-00-46-23.png)
 
 ## Let's get started in here:
 First create a Firebase app, name it whatever you want.  
