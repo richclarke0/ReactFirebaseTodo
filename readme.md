@@ -29,3 +29,42 @@ Once that's done, go to the project in your browser. Click **Build** on the left
 
 ## Next part: Installing Express
 `npm i express`
+
+Now create some folders and files  
+ `mkdir functions/apis`  
+ `touch functions/apis/todos.js`
+
+Remove everything from the `index.js` and then copy-paste the following code:
+
+```js
+//index.js
+
+const functions = require('firebase-functions');
+const app = require('express')();
+
+const {
+    getAllTodos
+} = require('./APIs/todos')
+
+app.get('/todos', getAllTodos);
+exports.api = functions.https.onRequest(app);
+```
+Now we have a route. When a user hits the `/todos` route, it will execute the `getAllTodos` function, which we will now write into the `todos.js` file in `functions/apis/`  
+````js
+//todos.js
+
+exports.getAllTodos = (request, response) => {
+    todos = [
+        {
+            'id': '1',
+            'title': 'greeting',
+            'body': 'Hello world from sharvin shah' 
+        },
+        {
+            'id': '2',
+            'title': 'greeting2',
+            'body': 'Hello2 world2 from sharvin shah' 
+        }
+    ]
+    return response.json(todos);
+}
