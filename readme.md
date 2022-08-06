@@ -44,7 +44,7 @@ const app = require('express')();
 
 const {
     getAllTodos
-} = require('./APIs/todos')
+} = require('./apis/todos') // make sure this matches the case of the dir name!
 
 app.get('/todos', getAllTodos);
 exports.api = functions.https.onRequest(app);
@@ -53,7 +53,7 @@ Now we have a route. When a user hits the `/todos` route, it will execute the `g
 ```js
 //todos.js
 
-exports.getAllTodos = (request, response) => {
+exports.getAllTodos = (req, res) => {
     todos = [
         {
             'id': '1',
@@ -66,6 +66,35 @@ exports.getAllTodos = (request, response) => {
             'body': 'Hello2 world2 from sharvin shah' 
         }
     ]
-    return response.json(todos);
+    return res.json(todos);
 }
 ```
+Now you `firebase deploy`  and press `y` when the `helloWorld` prompt to `Would you like to proceed with deletion?` comes up.
+
+## Oh Noes! An Error
+
+```
+Error: There was an error deploying functions
+```
+
+This is not very helpful. What went wrong... hmmm. I went back through the code, and noticed this first (to be clear, this is *not* the error)
+```js
+const app = require('express')();
+```
+What's with those trailing `()`'s? I don't remember seeing that before when working with MERN apps. He's... invoking it as he requires it? I don't get it. This is something to explore more later.
+
+Anyway, before long I found the culprit. In the original tutorial, the `apis` folder is `APIs`. This case sensitivity was the problem. My folder is called
+```
+react-firebase-todo/functions/apis
+```
+but the `require` in `index.js` is...
+```js
+require('./APIs/todos')
+```
+They don't match. I changed it to:
+```js
+require('./apis/todos')
+```
+Seved, and tried 'firebase deploy' again, and got my happy little **✔  Deploy complete!**
+
+## Lets move on
