@@ -101,6 +101,101 @@ require('./apis/todos')
 ```
 Seved, and tried 'firebase deploy' again, and got my happy little **✔  Deploy complete!**
 
-At this point, I tried to open the URL at `https://us-central1-thenameofmytodoapp.cloudfunctions.net/api/todos`
-## Lets move on
+At this point, I tried to open the URL at `https://us-central1-thenameofmytodoapp.cloudfunctions.net/api/todos` and I got a big, fat 
+<hr>
+
+## **Error: Forbidden**
+### **Your client does not have permission to get URL /api/todos from this server.**
+<hr>
+
+This is what I get for using a tutorial from 2020. I searched and found this on StackOverflow:
+> *it happens to me after i upgraded all NPM packages and then deployed... i delete all the functions from the cloude and re-deplyed them. it solve me this error immediately. without change permisions or any other cahnge*
+
+Kay... go to the functions panel on the firebase dashboard of the project, click the three dots to the right of my function, click **Delete Function**. Boom, function has been deleted.  
+Now, `firebase deploy`... try the URL again...
+*it works!*  
+
+![](readme_img/2022-08-06-13-13-12.png)  
+
+## Let's move on
+
+Time to create a database. In the original GIF on the tutoral, there is only one type of database. I don't know which one to pick because there are now two types, 
+- Firestore Database
+- Realtime Database
+ 
+Click **Firestore Database**  
+ 
+Create a Firestore Database with the defaults, and make sure you click **Test Mode.**
+
+Then click **Start Collection**  
+
+Set **Collection ID** as **todos**  
+
+Now, add these values. You can use your current date and time.  
+
+I tried to ignore **Document ID** and it wouldn't let me so I clicked **Auto-ID**.
+
+`npm i firebase-admin`  
+`mkdir functions/util`  
+`touch util/admin.js`  
+ ```js
+ //admin.js
+
+ const admin = require('firebase-admin');
+
+admin.initializeApp();
+
+const db = admin.firestore();
+
+module.exports = { admin, db };
+```
+Open `todos.js`
+```js
+//todos.js
+
+const { db } = require('../util/admin');
+
+exports.getAllTodos = (request, response) => {
+	db
+		.collection('todos')
+		.orderBy('createdAt', 'desc')
+		.get()
+		.then((data) => {
+			let todos = [];
+			data.forEach((doc) => {
+				todos.push({
+                    todoId: doc.id,
+                    title: doc.data().title,
+					body: doc.data().body,
+					createdAt: doc.data().createdAt,
+				});
+			});
+			return response.json(todos);
+		})
+		.catch((err) => {
+			console.error(err);
+			return response.status(500).json({ error: err.code});
+		});
+};
+```
+
+Lets unpack this a bit:
+
+First, a little detour around **imports** since I was having a conversation around this today.
+<!-- ![](readme_img/2022-08-06-15-58-23.png) -->
+- In the file `admin.js`, we are exporting two different things:  
+  ```js
+  module.exports = { admin, db };
+  ```
+- When we import from the `admin.js` file `todos.js`, we have this line:
+  ```js
+     const { db } = require('../util/admin');
+  ```
+This command with the `{ db }` essentially "pulls" the `db` function from `admin.js` by itself.
+
+
+Back to the tutorial.
+
+In the code inside `todos.js`, we have db.collection.... a bunch of stuff. It's basically telling firebase what collection it's looking in, the order of the results, and more. The code is pretty intuitive.
+
 
