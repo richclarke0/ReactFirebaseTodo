@@ -50,7 +50,7 @@ app.get('/todos', getAllTodos);
 exports.api = functions.https.onRequest(app);
 ```
 Now we have a route. When a user hits the `/todos` route, it will execute the `getAllTodos` function, which we will now write into the `todos.js` file in `functions/apis/`  
-````js
+```js
 //todos.js
 
 exports.getAllTodos = (request, response) => {
@@ -68,3 +68,4 @@ exports.getAllTodos = (request, response) => {
     ]
     return response.json(todos);
 }
+```
