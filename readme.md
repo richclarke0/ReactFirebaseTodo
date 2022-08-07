@@ -131,8 +131,26 @@ Then click **Start Collection**
 
 Set **Collection ID** as **todos**  
 
-Now, add these values. You can use your current date and time.  
-
+Now, add these values using this set of fields:
+![](readme_img/2022-08-06-13-29-55.png)
+You can use your current date and time.  
+```js
+{
+    Field: title,
+    Type: String,
+    Value: some title
+},
+{
+    Field: body,
+    Type: String,
+    Value: enter whatever you want here
+},
+{
+    Field: createdAt,
+    Type: timestamp,
+    Value: Add the current date and time here
+}
+```
 I tried to ignore **Document ID** and it wouldn't let me so I clicked **Auto-ID**.
 
 `npm i firebase-admin`  
@@ -197,5 +215,7 @@ This command with the `{ db }` essentially "pulls" the `db` function from `admin
 Back to the tutorial.
 
 In the code inside `todos.js`, we have db.collection.... a bunch of stuff. It's basically telling firebase what collection it's looking in, the order of the results, and more. The code is pretty intuitive.
+
+Now I tried the `firebase serve` command out of the tutorial. I got a warning about my node version being 18 but it still worked, though I got kind of a weird return.  
 
 
