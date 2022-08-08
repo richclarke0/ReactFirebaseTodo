@@ -216,6 +216,73 @@ Back to the tutorial.
 
 In the code inside `todos.js`, we have db.collection.... a bunch of stuff. It's basically telling firebase what collection it's looking in, the order of the results, and more. The code is pretty intuitive.
 
-Now I tried the `firebase serve` command out of the tutorial. I got a warning about my node version being 18 but it still worked, though I got kind of a weird return.  
+Now I tried the `firebase serve` command out of the tutorial. I got a warning about my node version being 18 but it still worked.
+
+```js
+//return
+[
+  {
+    "todoId": "wlfqnutSnp7U6K2RyIxW",
+    "title": "my title is here",
+    "body": "here is some text",
+    "createdAt": {
+      "_seconds": 1659820398,
+      "_nanoseconds": 665000000
+    }
+  }
+]
+```
+
+#### Now we need a "Create Todo" functionality
+1. Require it in `index.js`
+2. Write the method inside `todos.js`  
+   
+```js 
+//index.js
+
+const {
+    ..,
+    postOneTodo
+} = require('./APIs/todos')
+
+app.post('/todo', postOneTodo);
+```
+So now, in `index.js` you have `const { getAllTodos, postOneTodo } = ...` etcetera. Destructuring the functions out of the `require`.
+
+```js
+//todos.js
+
+exports.postOneTodo = (request, response) => {
+	// i love the use of trim() here
+    if (request.body.body.trim() === '') {
+		return response.status(400).json({ body: 'Must not be empty' });
+    }
+    
+    if(request.body.title.trim() === '') {
+        return response.status(400).json({ title: 'Must not be empty' });
+    }
+    //creates a new todo object, parsing req.body and adding date()
+    const newTodoItem = {
+        title: request.body.title,
+        body: request.body.body,
+        createdAt: new Date().toISOString()
+    }
+    //now the actual db submission stuff
+    db
+        .collection('todos')
+        .add(newTodoItem)
+        .then((doc)=>{
+            const responseTodoItem = newTodoItem;
+            responseTodoItem.id = doc.id;
+            return response.json(responseTodoItem);
+        })
+        .catch((err) => {
+			response.status(500).json({ error: 'Something went wrong' });
+			console.error(err);
+		});
+};
+```
+
+
 
 
