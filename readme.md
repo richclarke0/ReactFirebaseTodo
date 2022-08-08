@@ -284,6 +284,16 @@ exports.postOneTodo = (request, response) => {
 };
 ```
 
+Now lets fire up Postman. Add this crap to the POST request:
+```js
+URL: http://localhost:5000/todoapp-<app-id>/<region-name>/api/todo
 
+METHOD: POST
+
+Body: {
+   "title":"Hello World",
+   "body": "We are writing this awesome API"
+}
+```
 
 
