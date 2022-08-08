@@ -20,9 +20,13 @@ const app = require('express')();
 
 const {
     getAllTodos,
-    postOneTodo
+    postOneTodo,
+    deleteTodo
+
 } = require('./apis/todos')
 
 app.get('/todos', getAllTodos);
 exports.api = functions.https.onRequest(app);
 app.post('/todo', postOneTodo);
+app.delete('/todo/:todoId', deleteTodo);
+
