@@ -372,3 +372,33 @@ Call Southwest and get a direct flight to Postman. Create a DELETE and add the U
 }
 ```
 Wow. We're really accomplishing a lot here. You should be proud. Maybe run for mayor or something.
+
+### Edit todo
+
+You're going to add `editTodo` to your `const` destructuring in `index.js` and add this line as well for the route
+```js
+app.put('/todo/:todoId', editTodo);
+```
+then hop to `todos.js` and bang this in with a hammer:
+```js
+exports.editTodo = ( request, response ) => { 
+    //a little security, prevents manipulation of the ID or timestamp
+    if(request.body.todoId || request.body.createdAt){
+        response.status(403).json({message: 'Not allowed to edit todoId or createdAt fields'});
+    }
+    //lets get our document first
+    let document = db.collection('todos').doc(`${request.params.todoId}`);
+    //then push the update 
+    document.update(request.body)
+    .then(()=> {
+        response.json({message: 'Updated successfully'});
+    })
+    .catch((err) => {
+        console.error(err);
+        return response.status(500).json({ 
+                error: err.code 
+        });
+    });
+};
+```
+
