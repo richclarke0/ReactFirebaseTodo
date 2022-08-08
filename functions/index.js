@@ -21,7 +21,8 @@ const app = require('express')();
 const {
     getAllTodos,
     postOneTodo,
-    deleteTodo
+    deleteTodo,
+    editTodo
 
 } = require('./apis/todos')
 
