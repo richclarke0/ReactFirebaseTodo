@@ -246,6 +246,7 @@ const {
     postOneTodo
 } = require('./APIs/todos')
 
+//don't forget this line like i did :D
 app.post('/todo', postOneTodo);
 ```
 So now, in `index.js` you have `const { getAllTodos, postOneTodo } = ...` etcetera. Destructuring the functions out of the `require`.
