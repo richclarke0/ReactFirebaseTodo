@@ -5,7 +5,6 @@
 # React + Firebase ToDo App
 
 
-![logo](readme_img/2022-08-06-00-46-23.png)
 ## Let's get started in here:
 First create a Firebase app, name it whatever you want.  
 Then run this: 
@@ -26,7 +25,7 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
 });
 ```  
 Then: `firebase deploy`  
-At this point, Google may bug you to switch from their *Spark* account to their *Blaze* account. It's pay as you go.
+At this point, Google may bug you to switch from their *Spark* account to their *Blaze* account. It's pay as you go. I don't think you can continue without it but don't worry about it. You only live once, after all.
 
 Once that's done, go to the project in your browser. Click **Build** on the left side of the screen, then click **Functions** and mouseover the function to copy the URL. You can also look in your CLI right near where it says **Deploy complete!**, there is a line just above it with a clickable Function URL.  
 *Congrats, you just created something in Firebase!*
@@ -234,7 +233,7 @@ Now I tried the `firebase serve` command out of the tutorial. I got a warning ab
 ]
 ```
 
-#### Now we need a "Create Todo" functionality
+### Now we need a "Create Todo" functionality
 1. Require it in `index.js`
 2. Write the method inside `todos.js`  
    
@@ -301,5 +300,67 @@ Text: JSON
 ```
 Make sure you set up Postman like this:  
 ![](readme_img/2022-08-08-10-44-14.png)
+
+Fire away and it should return something that looks like this:  
+```js
+{
+    "title": "Derpy meme POST",
+    "body": "We put a POST in your POST so you can POST while you POST",
+    "createdAt": "2022-08-08T17:42:59.693Z",
+    "id": "TEnlFOUONf54lLQLhvP0"
+}
+```
+
+In the words of great American statesman John McClane, *Yippee Ki-Yay*, we just created a Todo!
+
+### Delete Todo
+
+The universe is infinite, but databases cost money. Thus, we need the ability to delete these todos. Let's do it.
+
+Much like the original `create`, we have to add something to `index.js`
+```js
+//index.js
+
+const {
+    ..,
+    deleteTodo
+} = require('./APIs/todos')
+
+//again, dont forget this part.
+app.delete('/todo/:todoId', deleteTodo);
+```
+
+Now our `const {...}` in index.js should be looking a lot like this:
+```js
+const {
+    getAllTodos,
+    postOneTodo,
+    deleteTodo
+} = require('./apis/todos')
+```
+and off we go to `todos.js` and add a new method:
+```js
+exports.deleteTodo = (request, response) => {
+    // this is really cool, .doc() is from firestore. 
+    //i need to read more documentation on these commands
+    const document = db.doc(`/todos/${request.params.todoId}`);
+    //now lets do the manipulation of document
+    document
+        .get()
+        .then((doc) => {
+            if (!doc.exists) {
+                return response.status(404).json({ error: 'Todo not found' })
+            }
+            return document.delete();
+        })
+        .then(() => {
+            response.json({ message: 'Delete successful!' });
+        })
+        .catch((err) => {
+            console.error(err);
+            return response.status(500).json({ error: err.code });
+        });
+};
+```
 
 
