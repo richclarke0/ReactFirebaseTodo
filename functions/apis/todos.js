@@ -96,3 +96,24 @@ exports.deleteTodo = (request, response) => {
             return response.status(500).json({ error: err.code });
         });
 };
+
+//edit
+exports.editTodo = ( request, response ) => { 
+    //a little security, prevents manipulation of the ID or timestamp
+    if(request.body.todoId || request.body.createdAt){
+        response.status(403).json({message: 'Not allowed to edit todoId or createdAt fields'});
+    }
+    //lets get our document first
+    let document = db.collection('todos').doc(`${request.params.todoId}`);
+    //then push the update 
+    document.update(request.body)
+    .then(()=> {
+        response.json({message: 'Updated successfully'});
+    })
+    .catch((err) => {
+        console.error(err);
+        return response.status(500).json({ 
+                error: err.code 
+        });
+    });
+};
