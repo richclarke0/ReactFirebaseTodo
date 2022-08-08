@@ -19,7 +19,8 @@ const functions = require('firebase-functions');
 const app = require('express')();
 
 const {
-    getAllTodos
+    getAllTodos,
+    postOneTodo
 } = require('./apis/todos')
 
 app.get('/todos', getAllTodos);
