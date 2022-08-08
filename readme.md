@@ -364,7 +364,7 @@ exports.deleteTodo = (request, response) => {
 ```
 
 Call Southwest and get a direct flight to Postman. Create a DELETE and add the URL with the ID you peeled from your original todo that you created, like this:
- ![](2022-08-08-11-42-39.png)
+ ![](readme_img/2022-08-08-11-42-39.png)
  Hit send, recieve a response:  
  ```js
 {
@@ -377,6 +377,7 @@ Wow. We're really accomplishing a lot here. You should be proud. Maybe run for m
 
 You're going to add `editTodo` to your `const` destructuring in `index.js` and add this line as well for the route
 ```js
+// i forgot to paste this in again lol
 app.put('/todo/:todoId', editTodo);
 ```
 then hop to `todos.js` and bang this in with a hammer:
@@ -402,3 +403,6 @@ exports.editTodo = ( request, response ) => {
 };
 ```
 
+Zoom back over to Postman. You probably need to add another todo, if you only added one originally and then deleted it to test your delete route. Once you have an existing todo, get the id from it and do this:
+
+![](readme_img/2022-08-08-12-00-03.png)
