@@ -1,5 +1,5 @@
 ###### *Press CMD+K, then V to preview this file in a side panel in VScode.* This readme and project are based on this tutorial on [freecodecamp](https://www.freecodecamp.org):
-[![ToDo Heading from FreeCodeCamp](2022-08-06-12-43-42.png)](https://www.freecodecamp.org/news/how-to-build-a-todo-application-using-reactjs-and-firebase/)
+[![ToDo Heading from FreeCodeCamp](readme_img/2022-08-06-12-43-42.png)](https://www.freecodecamp.org/news/how-to-build-a-todo-application-using-reactjs-and-firebase/)
 <hr>
 
 # React + Firebase ToDo App
