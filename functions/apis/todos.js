@@ -17,10 +17,9 @@
 //     return res.json(todos)
 // }
 
-//todos.js
-
 const { db } = require('../util/admin');
 
+//retrieve the todos
 exports.getAllTodos = (request, response) => {
 	db
 		.collection('todos')
@@ -44,6 +43,7 @@ exports.getAllTodos = (request, response) => {
 		});
 };
 
+//add a todo
 exports.postOneTodo = (request, response) => {
     // i love the use of trim() here
     if (request.body.body.trim() === '') {
@@ -72,4 +72,27 @@ exports.postOneTodo = (request, response) => {
 			response.status(500).json({ error: 'Something went wrong' });
 			console.error(err);
 		});
+};
+
+//delete
+exports.deleteTodo = (request, response) => {
+    // this is really cool, .doc() is from firestore. 
+    //i need to read more documentation on these commands
+    const document = db.doc(`/todos/${request.params.todoId}`);
+    //now lets do the manipulation of document
+    document
+        .get()
+        .then((doc) => {
+            if (!doc.exists) {
+                return response.status(404).json({ error: 'Todo not found' })
+            }
+            return document.delete();
+        })
+        .then(() => {
+            response.json({ message: 'Delete successful!' });
+        })
+        .catch((err) => {
+            console.error(err);
+            return response.status(500).json({ error: err.code });
+        });
 };
