@@ -406,3 +406,13 @@ exports.editTodo = ( request, response ) => {
 Zoom back over to Postman. You probably need to add another todo, if you only added one originally and then deleted it to test your delete route. Once you have an existing todo, get the id from it and do this:
 
 ![](readme_img/2022-08-08-12-00-03.png)
+
+Response will be:  
+```js
+{
+    "message": "Updated successfully"
+}
+```
+And if you look up that todo, you will see the updated fields.
+
+## API
