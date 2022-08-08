@@ -363,4 +363,12 @@ exports.deleteTodo = (request, response) => {
 };
 ```
 
-
+Call Southwest and get a direct flight to Postman. Create a DELETE and add the URL with the ID you peeled from your original todo that you created, like this:
+ ![](2022-08-08-11-42-39.png)
+ Hit send, recieve a response:  
+ ```js
+{
+    "message": "Delete successful!"
+}
+```
+Wow. We're really accomplishing a lot here. You should be proud. Maybe run for mayor or something.
