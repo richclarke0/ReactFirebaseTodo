@@ -45,7 +45,7 @@ exports.getAllTodos = (request, response) => {
 };
 
 exports.postOneTodo = (request, response) => {
-	// i love the use of trim() here
+    // i love the use of trim() here
     if (request.body.body.trim() === '') {
 		return response.status(400).json({ body: 'Must not be empty' });
     }
