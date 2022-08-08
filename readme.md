@@ -131,7 +131,8 @@ Then click **Start Collection**
 
 Set **Collection ID** as **todos**  
 
-Now, add these values using this set of fields:
+Now, add these values using this set of fields:  
+
 ![](readme_img/2022-08-06-13-29-55.png)
 You can use your current date and time.  
 ```js
