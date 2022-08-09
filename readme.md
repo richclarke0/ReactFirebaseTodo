@@ -585,3 +585,29 @@ Hmm.. Well, my google-fu is strong, and I found this after much searching:
 3. `npm i` again.
 4. Boom, `firebase serve` should be working again.
 
+## **ANYWAY**
+
+Alright can we continue? *Sheesh.*
+
+Lets hop over to Postman.
+
+Create a new request, select the method type as POST, set the body to RAW and select json:
+
+```
+URL: http://localhost:5000/todoapp-<app-id>/<region-name>/api/login
+
+METHOD: POST
+
+Body: {   
+    "email":"your@useremail.com", 
+    "password": "your_password"
+}
+```
+![](readme_img/2022-08-09-15-38-03.png)
+
+Hit **Send** and you'll get a token back.
+
+![](readme_img/2022-08-09-15-40-42.png)  
+
+We're going to use it. It expires in 60 minutes. Work fast, homie.
+
