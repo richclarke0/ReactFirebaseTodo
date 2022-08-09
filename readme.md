@@ -498,6 +498,8 @@ const firebase = require('firebase');
 firebase.initializeApp(config);
 
 const { validateLoginData, validateSignUpData } = require('../util/validators');
+//we have not yet created validators.js
+
 
 // Login
 exports.loginUser = (request, response) => {
@@ -524,4 +526,26 @@ exports.loginUser = (request, response) => {
         })
 };
 ```
+
+**signInWithEmailAndPassword** checks for correct user credentials. Correct credentials return the token.
+
+`touch functions/util/validators.js`
+
+```js
+// validators.js
+
+//cleaned this function up a bit from the original
+const isEmpty = (string) => !string.trim()
+
+exports.validateLoginData = (data) => {
+   let errors = {};
+   if (isEmpty(data.email)) errors.email = 'Must not be empty';
+   if (isEmpty(data.password)) errors.password = 'Must not be  empty';
+   return {
+       errors,
+       valid: Object.keys(errors).length === 0 ? true : false
+    };
+};
+```  
+
 
