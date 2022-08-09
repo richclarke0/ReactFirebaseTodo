@@ -5,7 +5,7 @@
 # React + Firebase ToDo App
 
 
-## Let's get started in here:
+## Part 1: Let's get it started in here
 First create a Firebase app, name it whatever you want.  
 Then run this: 
 ` npm install -g firebase-tools`  
@@ -415,4 +415,113 @@ Response will be:
 ```
 And if you look up that todo, you will see the updated fields.
 
-## API
+## Part 2: APIs
+
+This is a multistep process:
+1. User Authentication ( Login and Signup ) API.
+2. GET and Update user details API.
+3. Update the user profile picture API.
+4. Securing the existing Todo API.
+
+But once this is done, the lions share of the app functionality with authorization and database is finished! Word. Let's get started.
+
+### User Authentication
+
+Jump to Firebase in the browser, go to your project, click **Build > Authentication > Get Started**
+
+![](readme_img/2022-08-09-10-56-42.png)  
+
+Click **Email/Password** and **Enable**
+
+Now click **Users** at the top of the screen
+
+![](readme_img/2022-08-09-11-32-41.png)  
+ Click **Add User** and create one.
+
+### 1. User Login API
+
+First install the firebase package which contains the **Firebase Auth Library**
+
+```
+npm i firebase
+```  
+Remember to do this in your **functions/** folder. Then `touch functions/APIs/users.js`
+
+In `index.js` add a new `const`
+
+```js
+const {
+    loginUser
+} = require('./apis/users')
+```
+and add a new labeled section for user routes with a login route underneath it:  
+```js
+//users
+app.post('/login', loginUser);
+```
+Back to the browser we go, click **Project Overview** then **+ Add App**
+ and click **Web** which looks like an empty HTML tag: **</>**  
+
+ ![](readme_img/2022-08-09-11-46-53.png)  
+
+ Enter an app name and register. You don't need firebase hosting. It will spit you out to a screen that looks kind of intimidating, with all kinds of scary words like SDK and NPM and stuff. 
+ 
+ Copy the object behind the `const firebaseConfig` and then click** this button:  
+ ![](readme_img/2022-08-09-11-50-14.png)
+
+ Now `touch functions/util/config.js` and open the file up to paste in the object you just copied.
+ ```js
+ //config.js
+module.exports = {
+     apiKey: "blahblahblah",
+     authDomain: "blahblahblah",
+     .... and so on
+}
+```
+
+If you forgot to copy it or something, you can go here:  
+
+![](readme_img/2022-08-09-11-57-01.png)  
+
+To open up the **Project Settings** panel, then just scroll down in the **General** tab (which is already selected) and you'll see it there.
+
+Off to our nice, empty `users.js` we go to paste some new stuff:   
+
+```js
+// users.js
+
+const { admin, db } = require('../util/admin');
+const config = require('../util/config');
+
+const firebase = require('firebase');
+
+firebase.initializeApp(config);
+
+const { validateLoginData, validateSignUpData } = require('../util/validators');
+
+// Login
+exports.loginUser = (request, response) => {
+    const user = {
+        email: request.body.email,
+        password: request.body.password
+    }
+
+    const { valid, errors } = validateLoginData(user);
+	if (!valid) return response.status(400).json(errors);
+
+    firebase
+        .auth()
+        .signInWithEmailAndPassword(user.email, user.password)
+        .then((data) => {
+            return data.user.getIdToken();
+        })
+        .then((token) => {
+            return response.json({ token });
+        })
+        .catch((error) => {
+            console.error(error);
+            return response.status(403).json({ general: 'wrong credentials, please try again'});
+        })
+};
+```
+
