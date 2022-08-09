@@ -547,5 +547,27 @@ exports.validateLoginData = (data) => {
     };
 };
 ```  
+### A new problem
+At this point, I should have been able to run `firebase serve` without issue, since the validators are live.
+
+But the use of `firebase-functions` requires node v16.
+
+```
+> $ npm i firebase-functions                                                        
+npm WARN EBADENGINE Unsupported engine {
+npm WARN EBADENGINE   package: undefined,
+npm WARN EBADENGINE   required: { node: '16' },
+npm WARN EBADENGINE   current: { node: 'v18.4.0', npm: '8.12.1' }
+npm WARN EBADENGINE }
+```
+
+I've never had to use NVM before, so I spent a little while messing around with it. Got it working relatively quickly. The commands 
+```
+nvm install node
+nvm install 16
+```
+Got me there. You can see your installed versions with `nvm ls` and type `nvm use 16` or `nvm use 18` or any version you have installed.
+
+### Back to the races...
 
 
