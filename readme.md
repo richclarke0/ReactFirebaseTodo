@@ -568,6 +568,12 @@ nvm install 16
 ```
 Got me there. You can see your installed versions with `nvm ls` and type `nvm use 16` or `nvm use 18` or any version you have installed.
 
+I used [this guide right here](https://tecadmin.net/install-nvm-macos-with-homebrew/) and put these commands in `~/.zsh`:
+```
+export NVM_DIR=~/.nvm
+[[ -s $HOME/.nvm/nvm.sh ]] && . $HOME/.nvm/nvm.sh
+```
+
 ### Back to the races...
 
 
