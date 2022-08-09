@@ -574,6 +574,14 @@ export NVM_DIR=~/.nvm
 [[ -s $HOME/.nvm/nvm.sh ]] && . $HOME/.nvm/nvm.sh
 ```
 
-### Back to the races...
+Now I tried running `firebase serve` and got a new error! Yay!
 
+```
+Error: Failed to load function definition from source: Failed to generate manifest from function source: Error [ERR_PACKAGE_PATH_NOT_EXPORTED]: No "exports" main defined in /Users/<project_dir>/functions/node_modules/firebase/package.json
+```
+Hmm.. Well, my google-fu is strong, and I found this after much searching:
+1. Open `package.json`
+2. Change firebase version to `^7.13.1`
+3. `npm i` again.
+4. Boom, `firebase serve` should be working again.
 
