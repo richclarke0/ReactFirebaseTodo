@@ -611,3 +611,19 @@ Hit **Send** and you'll get a token back.
 
 We're going to use it. It expires in 60 minutes. Work fast, homie.
 
+### 2. User sign-up API
+
+Default firebase auth only allows upi tp store info like email, pass etc. But we need more info so we know that this user owns the todos so they can CRUD the todos.
+
+We need a new **users** collection. Under this, we will store the user's data which will be mapped to the todo based on the users username. Each username will be unique for all users on the platform.
+
+```js
+//index.js
+
+const {
+    ..,
+    signUpUser
+} = require('./APIs/users')
+
+app.post('/signup', signUpUser);
+```
