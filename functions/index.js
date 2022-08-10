@@ -31,7 +31,8 @@ const {
     loginUser,
     signUpUser,
     uploadProfilePhoto,
-    getUserDetail
+    getUserDetail,
+    updateUserDetails
 } = require('./apis/users')
 
 
@@ -48,3 +49,4 @@ app.post('/login', loginUser);
 app.post('/signup', signUpUser);
 app.post('/user/image', auth, uploadProfilePhoto);
 app.get('/user', auth, getUserDetail);
+app.post('/user', auth, updateUserDetails);
