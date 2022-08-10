@@ -438,7 +438,7 @@ Now click **Users** at the top of the screen
 ![](readme_img/2022-08-09-11-32-41.png)  
  Click **Add User** and create one.
 
-### 1. User Login API
+### **Section 1. User Login API**
 
 First install the firebase package which contains the **Firebase Auth Library**
 
@@ -611,7 +611,7 @@ Hit **Send** and you'll get a token back.
 
 We're going to use it. It expires in 60 minutes. Work fast, homie.
 
-### 2. User sign-up API
+### **Section 2. User sign-up API**
 
 Default firebase auth only allows upi tp store info like email, pass etc. But we need more info so we know that this user owns the todos so they can CRUD the todos.
 
@@ -1060,3 +1060,55 @@ Here's a directory structure for us
 |   +-- .gitignore
 ```
 
+### **Section 3. User Dashboard**
+
+1. Configure ReactJS and Material UI.
+2. Building Login and SignUp Form.
+3. Building Account Section.
+
+#### **3.1 Configure ReactJS and Material UI:**
+
+First install `create-react-app`:
+```
+npm install create-react-app
+//i did not use the -g (global) flag as in the original tutorial
+```
+
+now create a new app
+```
+npx create-react-app view
+```
+
+Remember to use **version v16.13.1** of the ReactJS library.
+```
+npm install -save react@16.13.1 react-dom@16.13.1
+```
+
+I had, for some reason, to run the above `npx create...` command again, but at the end I got the predicted console output:
+```
+We suggest that you begin by typing:
+
+  cd view
+  npm start
+
+Happy hacking!
+```
+By the way, package.json should be looking someting like this:
+```js
+{
+  "dependencies": {
+    "busboy": "^1.6.0",
+    "create-react-app": "^5.0.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  }
+}
+```
+and our dir structure overall should be
+```
++-- firebase.json 
++-- functions { This Directory consists our API logic }
++-- view { This Directory consists our FrontEnd Components }
++-- .firebaserc
++-- .gitignore
+```
