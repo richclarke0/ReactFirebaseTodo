@@ -17,7 +17,7 @@
 //     return res.json(todos)
 // }
 
-const { db } = require('../util/admin');
+const { db } = require('../util/admin'); 
 
 //retrieve the todos
 exports.getAllTodos = (request, response) => {
