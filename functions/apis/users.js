@@ -125,21 +125,24 @@ exports.uploadProfilePhoto = (request, response) => {
 	const path = require('path');
 	const os = require('os');
 	const fs = require('fs');
-	const busboy = new BusBoy({ headers: request.headers });
+	const busboy = BusBoy({ headers: request.headers });
 
 	let imageFileName;
 	let imageToBeUploaded = {};
 
-	busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
-		if (mimetype !== 'image/png' && mimetype !== 'image/jpeg') {
+	// busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
+	busboy.on('file', (fieldname, file, info) => {
+        const { filename, encoding, mimeType } = info;
+		if (mimeType !== 'image/png' && mimeType !== 'image/jpeg') {
 			return response.status(400).json({ error: 'Wrong file type submitted' });
 		}
 		const imageExtension = filename.split('.')[filename.split('.').length - 1];
         imageFileName = `${request.user.username}.${imageExtension}`;
 		const filePath = path.join(os.tmpdir(), imageFileName);
-		imageToBeUploaded = { filePath, mimetype };
+		imageToBeUploaded = { filePath, mimeType };
 		file.pipe(fs.createWriteStream(filePath));
     });
+
     deleteImage(imageFileName);
 	busboy.on('finish', () => {
 		admin
