@@ -23,13 +23,17 @@ const {
     postOneTodo,
     deleteTodo,
     editTodo,
-
 } = require('./apis/todos')
+
+const auth = require('./util/auth');
 
 const {
     loginUser,
-    signUpUser
+    signUpUser,
+    uploadProfilePhoto
 } = require('./apis/users')
+
+
 
 //crud
 app.get('/todos', getAllTodos);
@@ -41,3 +45,4 @@ app.put('/todo/:todoId', editTodo);
 //users
 app.post('/login', loginUser);
 app.post('/signup', signUpUser);
+app.post('/user/image', auth, uploadProfilePhoto);

@@ -741,3 +741,58 @@ exports.signUpUser = (request, response) => {
 		});
 }
 ```
+
+1. Validates user with `validateSignUpData`
+2. Sends email/pass to firebase `createUserWithEmailAndPassword`
+3. Save user credentials in the database.
+
+Lets test it in Postman:
+
+![](readme_img/2022-08-09-17-27-44.png)  
+You'll get a token response:  
+![](readme_img/2022-08-09-17-29-54.png)  
+
+You can check on the creation in `firestore database`
+
+![](readme_img/2022-08-09-17-31-42.png)
+
+### 3. Upload profile pic
+
+Our users will be able to upload their profile picture. To achieve this we will be using Storage bucket. Go to the side panel in Firebase and click **Storage**
+
+![](readme_img/2022-08-09-17-58-37.png)  
+
+Click the three dots on the right (right next to the Upload File button) and click **Add Bucket**
+
+Pick a location (US-CENTRAL1) and Access Frequency (Standard) and click **Continue**  
+
+I left it in production mode and clicked **Create**
+
+Now go to the **Rules** tab at the top and update permissions to this:
+
+```
+rules_version = '2';
+service firebase.storage {
+	match /b/{bucket}/o {
+  	match /{allPatchs=**} {
+    	allow read;
+    }
+  }
+}
+```
+Uploading pics will be done with the `busboy` package
+
+`npm i busboy`
+
+```js
+//add some imports to index.js
+//add uploadProfilePhoto below signUpUser
+
+const auth = require('./util/auth');
+
+const {
+    ..,
+    uploadProfilePhoto
+} = require('./APIs/users')
+
+app.post('/user/image', auth, uploadProfilePhoto);
