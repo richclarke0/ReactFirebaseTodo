@@ -30,7 +30,8 @@ const auth = require('./util/auth.js');
 const {
     loginUser,
     signUpUser,
-    uploadProfilePhoto
+    uploadProfilePhoto,
+    getUserDetail
 } = require('./apis/users')
 
 
@@ -46,3 +47,4 @@ app.put('/todo/:todoId', editTodo);
 app.post('/login', loginUser);
 app.post('/signup', signUpUser);
 app.post('/user/image', auth, uploadProfilePhoto);
+app.get('/user', auth, getUserDetail);
