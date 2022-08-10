@@ -23,6 +23,7 @@ const { db } = require('../util/admin');
 exports.getAllTodos = (request, response) => {
 	db
 		.collection('todos')
+        .where('username','==',request.user.username) //added in auth
 		.orderBy('createdAt', 'desc')
 		.get()
 		.then((data) => {
@@ -43,6 +44,24 @@ exports.getAllTodos = (request, response) => {
 		});
 };
 
+//get one of them
+exports.getOneTodo = (request, response) => {
+    const document = db.doc(`/todos/${request.params.todoId}`);
+	document
+        .get()
+        .then((doc) => {
+            if (!doc.exists) {
+                return response.status(404).json({ error: 'Todo not found' })
+            }
+            // return document.delete();
+            response.json(doc);
+        })
+        .catch((err) => {
+            console.error(err);
+            return response.status(500).json({ error: err.code });
+        });
+};
+
 //add a todo
 exports.postOneTodo = (request, response) => {
     // i love the use of trim() here
@@ -57,7 +76,8 @@ exports.postOneTodo = (request, response) => {
     const newTodoItem = {
         title: request.body.title,
         body: request.body.body,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
+        username: request.user.username,
     }
     //now the actual db submission stuff
     db

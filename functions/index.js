@@ -23,6 +23,7 @@ const {
     postOneTodo,
     deleteTodo,
     editTodo,
+    getOneTodo,
 } = require('./apis/todos')
 
 const auth = require('./util/auth.js');
@@ -39,7 +40,7 @@ const {
 
 //crud
 app.get('/todos', getAllTodos);
-exports.api = functions.https.onRequest(app);
+app.get('/todo/:todoId', getOneTodo)
 app.post('/todo', postOneTodo);
 app.delete('/todo/:todoId', deleteTodo);
 app.put('/todo/:todoId', editTodo);
@@ -50,3 +51,5 @@ app.post('/signup', signUpUser);
 app.post('/user/image', auth, uploadProfilePhoto);
 app.get('/user', auth, getUserDetail);
 app.post('/user', auth, updateUserDetails);
+
+exports.api = functions.https.onRequest(app);
