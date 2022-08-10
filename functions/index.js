@@ -27,7 +27,8 @@ const {
 } = require('./apis/todos')
 
 const {
-    loginUser
+    loginUser,
+    signUpUser
 } = require('./apis/users')
 
 //crud
@@ -39,3 +40,4 @@ app.put('/todo/:todoId', editTodo);
 
 //users
 app.post('/login', loginUser);
+app.post('/signup', signUpUser);
