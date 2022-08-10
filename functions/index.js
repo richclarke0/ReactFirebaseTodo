@@ -25,7 +25,7 @@ const {
     editTodo,
 } = require('./apis/todos')
 
-const auth = require('./util/auth');
+const auth = require('./util/auth.js');
 
 const {
     loginUser,
