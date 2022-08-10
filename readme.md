@@ -821,21 +821,24 @@ exports.uploadProfilePhoto = (request, response) => {
 	const path = require('path');
 	const os = require('os');
 	const fs = require('fs');
-	const busboy = new BusBoy({ headers: request.headers });
+	const busboy = BusBoy({ headers: request.headers });
 
 	let imageFileName;
 	let imageToBeUploaded = {};
 
-	busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
-		if (mimetype !== 'image/png' && mimetype !== 'image/jpeg') {
+	// busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
+	busboy.on('file', (fieldname, file, info) => {
+        const { filename, encoding, mimeType } = info;
+		if (mimeType !== 'image/png' && mimeType !== 'image/jpeg') {
 			return response.status(400).json({ error: 'Wrong file type submitted' });
 		}
 		const imageExtension = filename.split('.')[filename.split('.').length - 1];
         imageFileName = `${request.user.username}.${imageExtension}`;
 		const filePath = path.join(os.tmpdir(), imageFileName);
-		imageToBeUploaded = { filePath, mimetype };
+		imageToBeUploaded = { filePath, mimeType };
 		file.pipe(fs.createWriteStream(filePath));
     });
+
     deleteImage(imageFileName);
 	busboy.on('finish', () => {
 		admin
@@ -866,3 +869,194 @@ exports.uploadProfilePhoto = (request, response) => {
 	busboy.end(request.rawBody);
 };
 ```
+I essentially had to rewrite portions of this because busboy introduced breaking changes since the original tutorial was written. 
+The first error I ran into was something like `busboy is not a constructor` so I changed the line
+```js
+const busboy = new BusBoy({ headers: request.headers });
+//to
+const busboy = BusBoy({ headers: request.headers });
+```
+
+I then kept gettng the 
+`"wrong filetype submitted"` error, so I started looking at the new sample code and they seem to have packaged up (in an object) some of the original parameters for the `busboy.on(...)` from the original so I had to change that up a bit.  
+
+The sample code I referenced is [here at the busboy npm page](https://www.npmjs.com/package/busboy)
+
+### 4. Get user deets
+
+```js
+// index.js
+
+const {
+    ..,
+    getUserDetail
+} = require('./APIs/users')
+
+app.get('/user', auth, getUserDetail);
+```
+and this:
+```js
+//users.js
+exports.getUserDetail = (request, response) => {
+    let userData = {};
+	db
+		.doc(`/users/${request.user.username}`)
+		.get()
+		.then((doc) => {
+			if (doc.exists) {
+                userData.userCredentials = doc.data();
+                return response.json(userData);
+			}	
+		})
+		.catch((error) => {
+			console.error(error);
+			return response.status(500).json({ error: error.code });
+		});
+}
+```
+
+Now test with Postman with a bearer token
+![](readme_img/2022-08-09-21-07-31.png)
+
+You should get a response like this:
+
+![](readme_img/2022-08-09-21-08-32.png)  
+
+### 5. Update Details
+
+```js
+// index.js
+
+const {
+    ..,
+    updateUserDetails
+} = require('./APIs/users')
+
+app.post('/user', auth, updateUserDetails);
+```
+
+```js
+//users.js
+
+exports.updateUserDetails = (request, response) => {
+    let document = db.collection('users').doc(`${request.user.username}`);
+    document.update(request.body)
+    .then(()=> {
+        response.json({message: 'Updated successfully'});
+    })
+    .catch((error) => {
+        console.error(error);
+        return response.status(500).json({ 
+            message: "Error, check your console for error body"
+        });
+    });
+}
+```
+This uses firebase's **update** method. Test it in postman:
+
+![](readme_img/2022-08-09-21-18-39.png)
+
+### 6. Securing todo APIs
+
+First update:
+```js
+//index.js
+app.get('/todos', auth, getAllTodos);
+app.get('/todo/:todoId', auth, getOneTodo);
+app.post('/todo',auth, postOneTodo);
+app.delete('/todo/:todoId',auth, deleteTodo);
+app.put('/todo/:todoId',auth, editTodo);
+```
+Then 
+```js
+//todos.js
+//add this inside the postOneTodo method
+const newTodoItem = {
+     //...
+     username: request.user.username,
+     //...
+}
+```
+Then
+```js
+//todos.js
+//add this .where under getAllTodos method
+db
+.collection('todos')
+.where('username', '==', request.user.username)
+.orderBy('createdAt', 'desc')
+```
+
+Run the firebase serve and test the GET all API. Don’t forget to send the bearer token. Here you will get a response error as follows:
+![](readme_img/2022-08-10-13-50-04.png)
+```js
+{   
+    "error": 9
+}
+```
+You will get a console error too
+```
+i  functions: Beginning execution of "api">  Error: 9 FAILED_PRECONDITION: The query requires an index. You can create it here: <HUMONGOUS_URL>      at callErrorFromStatus
+```
+CMD-click the URL and you will get spit out in the browser to firestore's thing for indexes. It may not work, though. In which case you can just click **Build > Firestore Database > Indexes** (the tab at the top) and click to create a new one **Add Index**.
+
+![](readme_img/2022-08-10-14-15-32.png)
+
+Once you do this, you can run the query again. The original tutorial says you will get back an array of a single object. But I didn't, I just received a return of `[]`.. well, you know why? Because my existing `todos` don't have a `username` field, dummy!
+
+So, off to firebase I go, into the firebase storage. Click into my todos, and add a new field to one of them, which matches the username assigned to the token I pasted into the bearer token field in postman. 
+
+### AND LO! BEHOLD!
+
+![](readme_img/2022-08-10-14-21-48.png)
+
+Let's try adding the username to the other todo I still have in there, using the panel in firebase... 
+
+![](readme_img/2022-08-10-14-26-00.png)
+
+click add...
+
+![](readme_img/2022-08-10-14-26-32.png)
+
+boom, there we are...
+
+![](readme_img/2022-08-10-14-26-53.png)
+
+Now hit the route again in postman...
+
+![](readme_img/2022-08-10-14-28-03.png)
+
+Ayyy we got two of em. Nice. It works!
+
+**Deleting a todo**
+
+Open the `todos.js` and under the `deleteTodo`method add the following condition. Add this condition inside the `document.get().then()` query below the `!doc.exists` conditional.
+
+```js
+//if (!doc.exists) {
+//   return response.status(404).j({ error: 'Todo not found' })
+//}
+if(doc.data().username !== request.user.username){
+     return response.status(403).json({error:"Unauthorized"})
+}
+// return document.delete(); 
+```  
+
+Here's a directory structure for us
+``` 
++-- firebase.json 
++-- functions
+|   +-- API
+|   +-- +-- todos.js 
+|   +-- +-- users.js
+|   +-- util
+|   +-- +-- admin.js
+|   +-- +-- auth.js
+|   +-- +-- validators.js
+|   +-- index.js
+|   +-- node_modules
+|   +-- package-lock.json
+|   +-- package.json
+|   +-- .gitignore
+```
+
