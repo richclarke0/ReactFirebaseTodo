@@ -438,7 +438,7 @@ Now click **Users** at the top of the screen
 ![](readme_img/2022-08-09-11-32-41.png)  
  Click **Add User** and create one.
 
-### 1. User Login API
+### **Section 1. User Login API**
 
 First install the firebase package which contains the **Firebase Auth Library**
 
@@ -611,7 +611,7 @@ Hit **Send** and you'll get a token back.
 
 We're going to use it. It expires in 60 minutes. Work fast, homie.
 
-### 2. User sign-up API
+### **Section 2. User sign-up API**
 
 Default firebase auth only allows upi tp store info like email, pass etc. But we need more info so we know that this user owns the todos so they can CRUD the todos.
 
@@ -1060,3 +1060,160 @@ Here's a directory structure for us
 |   +-- .gitignore
 ```
 
+### **Section 3. User Dashboard**
+
+1. Configure ReactJS and Material UI.
+2. Building Login
+3. SignUp Form.
+4. Building Account Section.
+
+#### **3.1 Configure ReactJS and Material UI:**
+
+First install `create-react-app`:
+```
+npm install create-react-app
+//i did not use the -g (global) flag as in the original tutorial
+```
+
+now create a new app
+```
+npx create-react-app view
+```
+
+Remember to use **version v16.13.1** of the ReactJS library.
+```
+npm install -save react@16.13.1 react-dom@16.13.1
+```
+
+I had, for some reason, to run the above `npx create...` command again, but at the end I got the predicted console output:
+```
+We suggest that you begin by typing:
+
+  cd view
+  npm start
+
+Happy hacking!
+```
+By the way, package.json should be looking someting like this:
+```js
+{
+  "dependencies": {
+    "busboy": "^1.6.0",
+    "create-react-app": "^5.0.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  }
+}
+```
+and our dir structure overall should be
+```
++-- firebase.json 
++-- functions { This Directory consists our API logic }
++-- view { This Directory consists our FrontEnd Components }
++-- .firebaserc
++-- .gitignore
+```
+Now run react with the commands above (`cd view` and then `npm start`. Go to the browser on `http://localhost:3000/` and you’ll see the react standard page thing with the atom on it.
+
+*Yay, react.*
+
+We gotta excise some stuff. Inside `view/`, remove all the files tagged `[ Remove ]`
+```
++-- README.md [ Remove ]
++-- package-lock.json
++-- package.json
++-- node_modules
++-- .gitignore
++-- public
+|   +-- favicon.ico [ Remove ]
+|   +-- index.html
+|   +-- logo192.png [ Remove ]
+|   +-- logo512.png [ Remove ]
+|   +-- manifest.json
+|   +-- robots.txt
++-- src
+|   +-- App.css
+|   +-- App.test.js
+|   +-- index.js
+|   +-- serviceWorker.js
+|   +-- App.js
+|   +-- index.css [ Remove ]
+|   +-- logo.svg [ Remove ]
+|   +-- setupTests.js
+```
+
+This can technically be done with one giant `rm` (make sure you are in `view/` when you do this lol):
+`rm README.md public/favicon.ico public/logo192.png public/logo512.png src/index.css src/logo.svg`
+
+Go to index.html under the public directory and remove the following lines:
+
+```html
+<link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+<link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+<link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+```
+
+Overwrite app.js
+```js
+import React from 'react'
+
+function App() {
+  return (
+    <div>
+
+    </div>
+  );
+}
+
+export default App;
+```
+remove `import './index.css';` from `index.js`
+
+Install material ui with ~~`npm install @material-ui/core`~~ 
+
+~~Remember to use version v4.9.8 of the Material UI library.~~
+
+Just kidding use `npm install @mui/material`
+
+#### **3.2 Login Form:**
+
+```js
+//top of app.js
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import login from './pages/login';
+```
+
+We are using Switch and Route to assign routes for our TodoApp. Right now we will add only the /login route and assign a login component to it.
+
+```js
+//add to app.js
+function App() {
+  return (
+    <Router>
+      <div>
+        <Switch>
+          <Route exact path="/login" component={login} />
+        </Switch>
+      </div>
+    </Router>
+  );
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#### **3.3 Signup Form:**
+#### **3.4 Account Section:**
